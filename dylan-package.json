@@ -1,0 +1,8 @@
+{
+    "dependencies": [ "v3d" ],
+    "dev-dependencies": [ "testworks" ],
+    "description": "N body problem",
+    "name": "dylan-nbody",
+    "version": "0.1.0",
+    "url": "https://github.com/fraya/dylan-nbody"
+}
