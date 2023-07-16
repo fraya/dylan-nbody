@@ -29,6 +29,7 @@ define module dylan-nbody
     offset-momentum!;
 
   create
+    body,
     body-position,
     body-position-setter,
     body-velocity,
@@ -38,16 +39,13 @@ define module dylan-nbody
 
   create
     system-bodies, system-bodies-setter,
-    system-delta, system-delta-setter,
-    system-steps, system-steps-setter,
-    system-step,  system-step-setter; 
+    system-delta, system-delta-setter;
 
   create
     add-body!,
     advance!,
     energy,
     start!,
-    finished?,
     report,
     run!;
   
