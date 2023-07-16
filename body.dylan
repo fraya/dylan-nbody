@@ -26,6 +26,14 @@ define method print-object
   end;
 end;
 
+define function body
+    (#key px, py, pz, vx, vy, vz, m) => (body :: <body>)
+  make(<body>,
+       position: v3d(px, py, pz),
+       velocity: v3d(vx, vy, vz),
+       mass: m)
+end;
+
 define method offset-momentum!
     (b :: <body>, p :: <v3>) => ()
   b.body-velocity := -p / $solar-mass
