@@ -65,7 +65,7 @@ define function position-after!
   inc!(b.body-position, b.body-velocity * dt)
 end;
 
-define inline function velocity-after!
+define function velocity-after!
     (b1 :: <body>, b2 :: <body>, dt :: <double-float>)
  => ()
   let p1  = b1.body-position;
@@ -77,4 +77,3 @@ define inline function velocity-after!
   decrease-velocity!(b1, d, b2.body-mass * mag);
   increase-velocity!(b2, d, b1.body-mass * mag);
 end;
-

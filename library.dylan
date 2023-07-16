@@ -22,7 +22,6 @@ define module dylan-nbody
   
   create
     <body>,
-    <bodies>,
     <body-system>;
 
   create
@@ -38,11 +37,6 @@ define module dylan-nbody
     body-mass-setter;
 
   create
-    system-bodies, system-bodies-setter,
-    system-delta, system-delta-setter;
-
-  create
-    add-body!,
     advance!,
     energy,
     start!,

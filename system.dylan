@@ -1,28 +1,7 @@
 Module: dylan-nbody-impl
 
-define constant <bodies>
+define constant <body-system>
   = limited(<stretchy-vector>, of: <body>);
-
-define class <body-system> (<object>)
-  slot system-bodies :: <bodies> = make(<bodies>),
-    init-keyword: bodies:;
-  slot system-delta :: <double-float> = 0.01d0,
-    init-keyword: delta:;
-end;
-
-define method print-object
-    (system :: <body-system>, stream :: <stream>) => ()
-  printing-object(system, stream)
-    format(stream, "delta: %= %=",
-	   system.system-delta,
-	   system.system-bodies)
-  end;
-end;
-
-define function add-body!
-    (system :: <body-system>, body :: <body>) => ()
-  add!(system.system-bodies, body)
-end;
 
 define function start!
     (system :: <body-system>) => ()
@@ -36,52 +15,50 @@ define function report
 end;
 
 define function run!
-    (system :: <body-system>, #key steps :: <integer> = 1) => ()
+    (system :: <body-system>,
+     steps  :: <integer>,
+     delta  :: <double-float>)
+ => ()
   start!(system);
   report(system);
   for (i from 0 below steps)
-    advance!(system)
+    advance!(system, delta)
   end;
   report(system);
 end;
 
 define method offset-momentum!
     (system :: <body-system>, p :: <v3>) => ()
-  for (b in system.system-bodies)
+  for (b in system)
     inc!(p, b.body-velocity * b.body-mass);
   end;
-  offset-momentum!(system.system-bodies[0], p);
+  offset-momentum!(system[0], p);
 end;
 
 define function advance!
-    (system :: <body-system>) => ()
-  let bodies = system.system-bodies;
-  let size   = bodies.size;
-  
+    (system :: <body-system>, delta :: <double-float>) => ()
+  let size = system.size;  
   for (i from 0 below size)
     for (j from i + 1 below size)
-      velocity-after!(bodies[i], bodies[j], system.system-delta)
+      velocity-after!(system[i], system[j], delta)
     end for;
   end for;
 
-  for (body in bodies)
-    position-after!(body, system.system-delta);
+  for (body in system)
+    position-after!(body, delta);
   end for;
 end;
 
 define function energy
     (system :: <body-system>) => (energy :: <double-float>)
-  
-  let bodies = system.system-bodies;
-  let size   = bodies.size;
-  let e      = 0.0d0;
+  let size   = system.size;
+  let energy = 0.0d0;
   
   for (i from 0 below size)
-    let bi = bodies[i];
-    inc!(e, kinetic-energy(bi));
+    inc!(energy, kinetic-energy(system[i]));
     for (j from i + 1 below size)
-      dec!(e, potential-energy(bi, bodies[j]))
+      dec!(energy, potential-energy(system[i], system[j]))
     end for;
   end for;
-  e
+  energy
 end energy;
