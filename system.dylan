@@ -29,9 +29,7 @@ end;
 
 define method offset-momentum!
     (system :: <body-system>, p :: <v3>) => ()
-  for (b in system)
-    inc!(p, b.body-velocity * b.body-mass);
-  end;
+  for (b in system) inc!(p, momentum(b)) end;
   offset-momentum!(system[0], p);
 end;
 

@@ -26,17 +26,14 @@ define method print-object
   end;
 end;
 
-define function body
-    (#key px, py, pz, vx, vy, vz, m) => (body :: <body>)
-  make(<body>,
-       position: v3d(px, py, pz),
-       velocity: v3d(vx, vy, vz),
-       mass: m)
-end;
-
 define method offset-momentum!
     (b :: <body>, p :: <v3>) => ()
-  b.body-velocity := -p / $solar-mass
+  inc!(b.body-velocity, -p / $solar-mass)
+end;
+
+define inline function momentum
+    (b :: <body>) => (momentum :: <v3>)
+  b.body-velocity * b.body-mass
 end;
 
 define function increase-velocity!
@@ -54,10 +51,14 @@ define function kinetic-energy
   0.5 * body.body-mass * squared(body.body-velocity)
 end;
 
+define function distance
+    (b1 :: <body>, b2 :: <body>) => (distance :: <float>)
+  v3d/distance(b1.body-position, b2.body-position)
+end;
+
 define function potential-energy
     (b1 :: <body>, b2 :: <body>) => (energy :: <double-float>)
-  let distance = distance(b1.body-position, b2.body-position);
-  b1.body-mass * b2.body-mass / distance
+  b1.body-mass * b2.body-mass / distance(b1, b2)
 end;
 
 define function position-after!
@@ -68,12 +69,8 @@ end;
 define function velocity-after!
     (b1 :: <body>, b2 :: <body>, dt :: <double-float>)
  => ()
-  let p1  = b1.body-position;
-  let p2  = b2.body-position;
-  let d   = p1 - p2;
-  let distance = distance(p1, p2);
-  let mag = dt / (distance * distance * distance);
-
+  let mag = dt / (distance(b1, b2) ^ 3);
+  let d   = b1.body-position - b2.body-position;
   decrease-velocity!(b1, d, b2.body-mass * mag);
   increase-velocity!(b2, d, b1.body-mass * mag);
 end;

@@ -1,6 +1,10 @@
 Module: dylan-user
 
 define library dylan-nbody
+  export
+    dylan-nbody,
+    dylan-nbody-impl;
+
   use common-dylan;
   use io,
     import: { format,
@@ -8,10 +12,7 @@ define library dylan-nbody
 	      print,
 	      pprint };
   use v3d;
-
-  export
-    dylan-nbody,
-    dylan-nbody-impl;
+  
 end library;
 
 define module dylan-nbody
@@ -28,7 +29,6 @@ define module dylan-nbody
     offset-momentum!;
 
   create
-    body,
     body-position,
     body-position-setter,
     body-velocity,
@@ -46,6 +46,8 @@ define module dylan-nbody
 end module;
 
 define module dylan-nbody-impl
+  use dylan-nbody;
+  
   use common-dylan;
   use common-extensions,
     import: { string-to-integer };
@@ -57,9 +59,10 @@ define module dylan-nbody-impl
   use print;
   use pprint;
   use transcendentals;
-  use v3d;
+  use v3d,
+    rename: { distance => v3d/distance };
   
-  use dylan-nbody;                 
+            
 
   // Additional exports for use by test suite.
   
