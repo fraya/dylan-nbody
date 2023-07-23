@@ -42,6 +42,14 @@ define module dylan-nbody
     start!,
     report,
     run!;
+
+  create
+    make-sun,
+    make-jupiter,
+    make-saturn,
+    make-uranus,
+    make-neptune,
+    make-solar-system;
   
 end module;
 
