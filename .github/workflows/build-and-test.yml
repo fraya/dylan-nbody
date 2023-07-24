@@ -28,7 +28,7 @@ jobs:
           path: |
             ./_packages
             ./registry
-          key: ${{ runner.os }}-cache-nbody
+          key: ${{ runner.os }}-${{ hashFiles('**/dylan-package.json') }}
 
       - name: Install Opendylan
         uses: dylan-lang/install-opendylan@v3
