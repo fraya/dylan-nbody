@@ -40,7 +40,16 @@ jobs:
         if: steps.cache-packages.outputs.cache-hit != 'true'
         run: dylan update
 
-      - name: Build tests
+      - name: Build dylan-nbody-app
         run: dylan build dylan-nbody-app
+
+      - name: Upload application artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: dylan-nbody-app
+          path: |
+            /home/runner/work/dylan-nbody/dylan-nbody/_build/bin
+            /home/runner/work/dylan-nbody/dylan-nbody/_build/lib
+
 
 
