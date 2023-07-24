@@ -15,18 +15,26 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-    
+
       - uses: actions/checkout@v3
 
       - name: Install Opendylan
+        if: steps.cache-od-2023-1.outputs.cache-hit != 'true'
         uses: dylan-lang/install-opendylan@v3
         with:
           version: 2023.1
           tag: v2023.1.0
 
+      - name: Cache Opendylan 2023.1
+        id: cache-od-2023-1
+        uses: actions/cache@v3
+        with:
+          path: /home/runner/work/dylan-nbody/dylan-compiler
+          key: ${{ runner.os }}-cache-od-2023-1
+
       - name: Download dependencies
         run: dylan update
-        
+
       - name: Build tests
         run: dylan build dylan-nbody-test-suite
 
