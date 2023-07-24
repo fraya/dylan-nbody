@@ -24,10 +24,11 @@ jobs:
           version: 2023.1
           tag: v2023.1.0
 
+      - name: Download dependencies
+        run: dylan update
+        
       - name: Build tests
-        run: |
-          dylan update
-          dylan build dylan-nbody-test-suite
+        run: dylan build dylan-nbody-test-suite
 
       - name: Run tests
         run: _build/bin/dylan-nbody-test-suite
