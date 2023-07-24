@@ -11,6 +11,9 @@ on:
   # This enables the Run Workflow button on the Actions tab.
   workflow_dispatch:
 
+env:
+  DYLAN: ${{ github.workspace }}
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -18,21 +21,23 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      - name: Cache Opendylan 2023.1
-        id: cache-od-2023-1
+      - name: Cache packages
+        id: cache-packages
         uses: actions/cache@v3
         with:
-          path: /home/runner/work
-          key: ${{ runner.os }}-cache-od-2023-1
+          path: |
+            ./_packages
+            ./registry
+          key: ${{ runner.os }}-cache-nbody
 
       - name: Install Opendylan
-        if: steps.cache-od-2023-1.outputs.cache-hit != 'true'
         uses: dylan-lang/install-opendylan@v3
         with:
           version: 2023.1
           tag: v2023.1.0
 
       - name: Download dependencies
+        if: steps.cache-packages.outputs.cache-hit != 'true'
         run: dylan update
 
       - name: Build tests
