@@ -25,7 +25,7 @@ jobs:
           path: /home/runner/work/dylan-nbody/
           key: ${{ runner.os }}-cache-od-2023-1
 
-     - name: Install Opendylan
+      - name: Install Opendylan
         if: steps.cache-od-2023-1.outputs.cache-hit != 'true'
         uses: dylan-lang/install-opendylan@v3
         with:
