@@ -22,7 +22,7 @@ jobs:
         id: cache-od-2023-1
         uses: actions/cache@v3
         with:
-          path: /home/runner/work/dylan-nbody/
+          path: /home/runner/work
           key: ${{ runner.os }}-cache-od-2023-1
 
       - name: Install Opendylan
