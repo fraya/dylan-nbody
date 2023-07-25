@@ -37,13 +37,13 @@ define inline function momentum
 end;
 
 define inline function increase-velocity!
-    (b :: <body>, d :: <v3>, m :: <double-float>) => ()
-  inc!(b.body-velocity, d * m)
+    (b :: <body>, delta :: <v3>) => ()
+  inc!(b.body-velocity, delta)
 end;
 
 define inline function decrease-velocity!
-    (b :: <body>, d :: <v3>, m :: <double-float>) => ()
-  dec!(b.body-velocity, d * m)
+    (b :: <body>, delta :: <v3>) => ()
+  dec!(b.body-velocity, delta)
 end;
 
 define inline function kinetic-energy
@@ -69,9 +69,10 @@ end;
 define inline function velocity-after!
     (b1 :: <body>, b2 :: <body>, dt :: <double-float>)
  => ()
-  let d   = distance(b1, b2);
-  let mag = dt / (d * d * d);
+  let distance = distance(b1, b2);
+  let mag = dt / (distance * distance * distance);
   let d   = b1.body-position - b2.body-position;
-  decrease-velocity!(b1, d, b2.body-mass * mag);
-  increase-velocity!(b2, d, b1.body-mass * mag);
+  let d2  = d * mag;
+  decrease-velocity!(b1, d2 * b2.body-mass);
+  increase-velocity!(b2, d2 * b1.body-mass);
 end;
