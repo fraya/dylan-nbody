@@ -1,0 +1,71 @@
+name: Release
+  
+on:
+  push:
+    tags:
+      - "v*"
+
+  # This enables the run workflow button on the actions tab
+  workflow_dispatch:
+
+env:
+  DYLAN: ${{ github.workspace }}
+
+jobs:
+  build_release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Add OD to PATH
+        run: |
+          echo "/home/runner/work/dylan-nbody/opendylan-2023.1/bin" >> $GITHUB_PATH
+
+      - name: Cache OD 2023.1
+        id: cache-2023-1
+        uses: actions/cache@v3
+        with:
+          path: |
+            /home/runner/work/dylan-nbody/opendylan-2023.1
+          key: ${{ runner.os }}-2023-1
+
+      - name: Cache packages
+        id: cache-packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ./_packages
+            ./registry
+          key: ${{ runner.os }}-${{ hashFiles('**/dylan-package.json') }}
+
+      - name: Install Opendylan
+        if: steps.cache-2023-1.outputs.cache-hit != 'true'
+        uses: dylan-lang/install-opendylan@v3
+        with:
+          version: 2023.1
+          tag: v2023.1.0
+
+      - name: Download dependencies
+        if: steps.cache-packages.outputs.cache-hit != 'true'
+        run: dylan update
+
+      - name: Build dylan-nbody-app
+        run: dylan build dylan-nbody-app
+
+      - name: Version
+        run: echo "{version}=${{ github.workspace }}_build/bin/dylan-body-app --version" >> $GITHUB_STATE
+
+      - name: Package application
+        run: |
+          tar cvfz dylan-nbody.tgz -C /home/runner/work/dylan-nbody/dylan-nbody/_build bin lib
+          
+      - name: Release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ github.token }}
+          prerelease: false
+          automatic_release_tag: latest
+          files: |
+            LICENSE
+            dylan-nbody.tgz
