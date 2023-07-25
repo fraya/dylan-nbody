@@ -1,5 +1,8 @@
 {
-    "dependencies": [ "v3d" ],
+    "dependencies": [
+	"v3d",
+	"command-line-parser"
+    ],
     "dev-dependencies": [ "testworks" ],
     "description": "N body problem",
     "name": "dylan-nbody",

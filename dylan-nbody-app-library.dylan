@@ -6,6 +6,7 @@ define library dylan-nbody-app
   use dylan-nbody;
   use io;
   use v3d;
+  use command-line-parser;
 end library;
 
 define module dylan-nbody-app
@@ -16,6 +17,7 @@ define module dylan-nbody-app
   use pprint;
   use transcendentals;
   use v3d;
+  use command-line-parser;
   
   use dylan-nbody;
 end module;
