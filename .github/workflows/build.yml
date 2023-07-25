@@ -1,27 +1,22 @@
-name: build dylan-nbody-app
-
-on:
+name: Build
+  
+on: 
   push:
-    # all branches
-  pull_request:
-    branches:
-      - main
-      - master
 
-  # This enables the Run Workflow button on the Actions tab.
+  # This enables the run workflow button on the actions tab
   workflow_dispatch:
 
 env:
   DYLAN: ${{ github.workspace }}
 
 jobs:
-  build:
+  build_release:
     runs-on: ubuntu-latest
     steps:
+      - name: checkout
+        uses: actions/checkout@v3
 
-      - uses: actions/checkout@v3
-
-      - name: Add OD to path
+      - name: Add OD to PATH
         run: |
           echo "/home/runner/work/dylan-nbody/opendylan-2023.1/bin" >> $GITHUB_PATH
 
@@ -56,13 +51,18 @@ jobs:
       - name: Build dylan-nbody-app
         run: dylan build dylan-nbody-app
 
-      - name: Upload application artifact
-        uses: actions/upload-artifact@v3
+      - name: Version
+        run: |
+          echo "{version}=`${{ github.workspace }}/_build/bin/dylan-nbody-app --version`" >> $GITHUB_STATE
+
+      - name: Package application
+        run: |
+          tar cvfz dylan-nbody.tgz -C /home/runner/work/dylan-nbody/dylan-nbody/_build bin lib
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: dylan-nbody-app
-          path: |
-            /home/runner/work/dylan-nbody/dylan-nbody/_build/bin
-            /home/runner/work/dylan-nbody/dylan-nbody/_build/lib
-
-
-
+          files: |
+            LICENSE
+            dylan-nbody.tgz
