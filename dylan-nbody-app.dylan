@@ -19,7 +19,7 @@ define function main
     (name :: <string>, arguments :: <vector>)
   block ()
     let cmd = make(<nbody-command-line>, help: "nbody problem");
-    parse-command-line(cmd, application-arguments());
+    parse-command-line(cmd, arguments);
 
     if (cmd.version)
       format-out("v%s\n", $version);
