@@ -30,3 +30,21 @@ The output is:
 
     -0.1690752d0
     -0.1690966d0
+
+# Sequence diagram
+
+The following sequence diagram shows the execution of the main
+program.
+
+```mermaid
+sequenceDiagram
+  participant User
+  participant System
+  User->>System: offset-momentum!(zero)
+  User->>System: energy
+  User->>System: run!(steps, delta)
+  loop steps
+    System->>System: advance!(delta)
+  end
+  User->>System: energy
+```
