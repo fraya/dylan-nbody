@@ -24,11 +24,9 @@ Compile the program:
 Execute the program in directory `../_build/bin`, passing the
 number of steps to simulate, for instance `500000`:
 
-    dylan-nbody-app 500000
+    dylan-nbody-app --steps 500000
 
 The output is:
 
     -0.1690752d0
     -0.1690966d0
-
-  
