@@ -69,10 +69,8 @@ end;
 define inline function velocity-after!
     (b1 :: <body>, b2 :: <body>, dt :: <double-float>)
  => ()
-  let distance = distance(b1, b2);
-  let mag = dt / (distance * distance * distance);
-  let d   = b1.body-position - b2.body-position;
-  let d2  = d * mag;
-  decrease-velocity!(b1, d2 * b2.body-mass);
-  increase-velocity!(b2, d2 * b1.body-mass);
+  let mag  = dt / (distance(b1, b2) ^ 3.0d0);
+  let d    = (b1.body-position - b2.body-position) * mag;
+  decrease-velocity!(b1, d * b2.body-mass);
+  increase-velocity!(b2, d * b1.body-mass);
 end;
