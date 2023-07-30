@@ -22,14 +22,14 @@ Compile the program:
     dylan build dylan-nbody-app
 
 Execute the program in directory `../_build/bin`, passing the
-number of steps to simulate, for instance `500000`:
+number of steps to simulate, for instance `1000000`:
 
-    dylan-nbody-app --steps 500000
+    dylan-nbody-app --steps 1000000
 
 The output is:
 
     -0.1690752d0
-    -0.1690966d0
+    -0.1690862d0
 
 # Sequence diagram
 
@@ -42,9 +42,8 @@ sequenceDiagram
   participant System
   User->>System: offset-momentum!(zero)
   User->>System: energy
-  User->>System: run!(steps, delta)
   loop steps
-    System->>System: advance!(delta)
+    User->>System: advance!(delta)
   end
   User->>System: energy
 ```

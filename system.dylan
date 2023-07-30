@@ -3,30 +3,6 @@ Module: dylan-nbody-impl
 define constant <body-system>
   = limited(<stretchy-vector>, of: <body>);
 
-define function start!
-    (system :: <body-system>) => ()
-  offset-momentum!(system, $v3-zero)
-end;
-
-define function report
-    (system :: <body-system>) => ()
-  format-out("%=\n", energy(system));
-  force-out();
-end;
-
-define function run!
-    (system :: <body-system>,
-     steps  :: <integer>,
-     delta  :: <double-float>)
- => ()
-  start!(system);
-  report(system);
-  for (i from 0 below steps)
-    advance!(system, delta)
-  end;
-  report(system);
-end;
-
 define method offset-momentum!
     (system :: <body-system>, p :: <v3>) => ()
   for (b in system) inc!(p, momentum(b)) end;

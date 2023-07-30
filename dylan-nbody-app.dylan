@@ -15,6 +15,12 @@ define command-line <nbody-command-line> ()
     default: #f;
 end command-line;
 
+define function report
+    (system :: <body-system>) => ()
+  format-out("%=\n", energy(system));
+  force-out();
+end;
+
 define function main
     (name :: <string>, arguments :: <vector>)
   block ()
@@ -33,7 +39,12 @@ define function main
 
     let solar-system = make-solar-system();
     let delta = 0.01d0;
-    run!(solar-system, cmd.steps, delta);
+    offset-momentum!(solar-system, $v3-zero);
+    report(solar-system);
+    for (i from 0 below cmd.steps)
+      advance!(solar-system, delta)
+    end;
+    report(solar-system);
     exit-application(0);
   exception (err :: <abort-command-error>)
     format-err("Usage error: %s\n", err);

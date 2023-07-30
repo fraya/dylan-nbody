@@ -12,7 +12,7 @@ end test;
 define test test-run-system-one-time ()
   let system = make-solar-system();
   let delta  = 0.01d0;
-  start!(system);
+  offset-momentum!(system, $v3-zero);
   assert-true(similar(-0.1690752d0, energy(system)));
   advance!(system, delta);
   assert-true(similar(-0.1690749d0, energy(system)));
@@ -22,7 +22,7 @@ define benchmark n-body-problem ()
   let system = make-solar-system();
   let steps  = 1_000_000;
   let delta  = 0.01d0;
-  start!(system);
+  offset-momentum!(system, $v3-zero);
   for (i :: <integer> from 0 below steps)
     advance!(system, delta);
   end;

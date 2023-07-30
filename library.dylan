@@ -38,11 +38,8 @@ define module dylan-nbody
 
   create
     advance!,
-    energy,
-    start!,
-    report,
-    run!;
-
+    energy;
+  
   create
     make-sun,
     make-jupiter,
